@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block head %}
+    Checkout
+{% endblock head %}
+{% block content %}
+<h1 class="container">Checkout</h1>
+<br>
+<form method="POST">
+	{% csrf_token %}
+<ol>
+{% for i in i %}
+	<li><h3>{{i.product.itemName}} : &#8377; {{i.product.price}}</h3>
+		<h5>Quantity: {{i.Cquantity}}</h5>
+		<h4 id='halftotal_{{i.id}}'></h4>
+	</li>
+	<hr>
+<script>
+var halftotal{{i.id}};
+halftotal{{i.id}} = {{i.Cquantity}} * {{i.product.price}};
+document.getElementById("halftotal_{{i.id}}").innerHTML = "&#8377; " + halftotal{{i.id}};
+</script>
+{% endfor %}
+</ol>
+<br>
+<h2>Total: &#8377;{{total}}</h2>
+<input type="text" class="form-control" name="user" placeholder="Enter the user's name, Default: Anonymous">
+<br>
+<button type=submit class="btn btn-primary">Checkout</button>
+</form>	
+{% endblock content %}

@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block head %}{% endblock head %} | BootShop</title>
+  <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div class="main">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">BootShop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="admin/shop/product/add/">Add Product +</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/Admin">Admin</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock content %}
+  </div>
+  <div class="sidenav">
+    <ul>
+      {% for i in i %}
+      <li>
+        <h3>{{i.product.itemName}}<br> <a href="{% url 'addProduct' i.product.id %}" class="btn btn-warning"> + </a>
+          {{i.Cquantity}} <a href="{% url 'decreaseItem' i.id%}" class="btn btn-warning"> - </a></h3>
+        <a class="btn btn-danger" href="{% url 'removeProduct' i.id %}">Remove Item</a>
+        <hr>
+      </li>
+      {% endfor %}
+      <h4>&#8377;{{total | default:0}}</h4>
+      <a href="{% url 'checkOut' %}" class="btn btn-success">Checkout</a>
+    </ul>
+  </div>
+</body>
+<style>
+  /* The sidebar menu */
+  .sidenav {
+    height: 100%;
+    /* Full-height: remove this if you want "auto" height */
+    width: 360px;
+    /* Set the width of the sidebar */
+    position: fixed;
+    /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1;
+    /* Stay on top */
+    top: 0;
+    /* Stay at the top */
+    left: 0;
+    background-color: rgb(232, 255, 235);
+    /* Black */
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    padding-top: 20px;
+  }
+
+  /* The navigation menu links */
+  .sidenav a {
+    /*padding: 6px 8px 6px 16px;*/
+    text-decoration: none;
+    color: black;
+    /*display: block;*/
+  }
+
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
+    color: white;
+  }
+
+  /* Style page content */
+  .main {
+    margin-left: 360px;
+    /* Same as the width of the sidebar */
+    padding: 0px 10px;
+  }
+
+  /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenav {
+      padding-top: 15px;
+    }
+
+    .sidenav a {
+      font-size: 18px;
+    }
+  }
+</style>
+
+</html>
