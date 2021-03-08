@@ -1,5 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import Product, Cart, CartProduct, Transaction
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+
+from xhtml2pdf import pisa
+
 
 # Create your views here.
 
@@ -94,4 +100,30 @@ def checkout(request):
         c.items.clear()
         c.save()
         print("Done")
+        return redirect(f'pdf/{t.id}')
     return render(request, 'checkout.html', {'c': c, 'i': i, 'total': total})
+
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
+def convert_to_pdf(request, id):
+    t = Transaction.objects.get(id=id)
+    total = 0
+    i = t.cartItems.all()
+    for p in i:
+        total = total+(p.product.price*p.Cquantity)
+
+    context = {
+        't':t,
+        'total':total
+    }
+    pdf = render_to_pdf('convertpdf.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
